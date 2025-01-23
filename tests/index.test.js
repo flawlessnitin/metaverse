@@ -1,52 +1,107 @@
-const axios = require("axios");
+const axios2 = require("axios");
 
 const BACKEND_URL = "http://localhost:3000";
-
+const axios = {
+  post: async (...args) => {
+    try {
+      const res = await axios2.post(...args);
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
+  get: async (...args) => {
+    try {
+      const res = await axios2.get(...args);
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
+  put: async (...args) => {
+    try {
+      const res = await axios2.put(...args);
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
+  delete: async (...args) => {
+    try {
+      const res = await axios2.delete(...args);
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
+};
 // describe blocks
 describe("Authentication", () => {
   test("User is able to sign up only once", async () => {
-    const username = "dev" + Math.random(); // dev0.339393
-    password = "123456";
+    const username = "kirat" + Math.random(); // kirat0.12331313
+    const password = "123456";
     const response = await axios.post(`${BACKEND_URL}/api/v1/signup`, {
       username,
       password,
       type: "admin",
     });
-    expect(response.statusCode).toBe(200);
+    console.log(response.data);
+    expect(response.status).toBe(200);
     const updatedResponse = await axios.post(`${BACKEND_URL}/api/v1/signup`, {
       username,
       password,
       type: "admin",
     });
-    expect(updatedResponse.statusCode).toBe(400);
+
+    expect(updatedResponse.status).toBe(400);
   });
+
   test("Signup request fails if the username is empty", async () => {
-    const username = `dev-${Math.random()}`; // dev0.0202
+    const username = `kirat-${Math.random()}`; // kirat-0.12312313
     const password = "123456";
+
     const response = await axios.post(`${BACKEND_URL}/api/v1/signup`, {
       password,
     });
-    expect(response.statusCode).toBe(400);
+
+    expect(response.status).toBe(400);
   });
+
   test("Signin succeeds if the username and password are correct", async () => {
-    const username = `dev-${Math.random()}`;
-    passowrd = "123456";
+    const username = `kirat-${Math.random()}`;
+    const password = "123456";
+
+    await axios.post(`${BACKEND_URL}/api/v1/signup`, {
+      username,
+      password,
+      type: "admin",
+    });
+
     const response = await axios.post(`${BACKEND_URL}/api/v1/signin`, {
       username,
-      passowrd,
+      password,
     });
-    expect(response.statusCode).toBe(200);
-    expect(response.body.token).toBeDefined();
+
+    expect(response.status).toBe(200);
+    expect(response.data.token).toBeDefined();
   });
+
   test("Signin fails if the username and password are incorrect", async () => {
-    const username = `dev-${Math.random()}`;
+    const username = `kirat-${Math.random()}`;
     const password = "123456";
+
+    await axios.post(`${BACKEND_URL}/api/v1/signup`, {
+      username,
+      password,
+      role: "admin",
+    });
+
     const response = await axios.post(`${BACKEND_URL}/api/v1/signin`, {
       username: "WrongUsername",
       password,
     });
-    expect(response.statusCode).toBe(403);
-    ``;
+
+    expect(response.status).toBe(403);
   });
 });
 
