@@ -16,5 +16,26 @@ userRouter.post("/metadata", userMiddleware, async (req, res) => {
     },
     data: { avatarId: parsedData.data.avatarId },
   });
+  res.json({ message: "Metadata updated!" });
 });
-userRouter.get("/metadata/bulk", (req, res) => {});
+userRouter.get("/metadata/bulk", async (req, res) => {
+  const userIdString = (req.query.ids ?? "[]") as string;
+  const userIds = userIdString.slice(1, userIdString?.length - 2).split(",");
+  const metadata = await client.user.findMany({
+    where: {
+      id: {
+        in: userIds,
+      },
+    },
+    select: {
+      id: true,
+      avatar: true,
+    },
+  });
+  res.json({
+    avatars: metadata.map((m) => ({
+      id: m.id,
+      avatarId: m.avatar?.imageUrl,
+    })),
+  });
+});

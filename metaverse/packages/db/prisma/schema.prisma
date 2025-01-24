@@ -48,6 +48,7 @@ model Element {
   id       String          @id @unique @default(cuid())
   width    Int
   height   Int
+  static  Boolean
   imageUrl String
   spaces   spaceElements[]
   mapElements MapElements[]
@@ -58,6 +59,7 @@ model Map {
   width  Int
   height Int
   name   String
+  thumanail String?
   mapElements MapElements[]
 }
 

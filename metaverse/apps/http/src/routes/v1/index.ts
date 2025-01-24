@@ -70,8 +70,27 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.get("/elements", (req, res) => {});
-router.get("/avatars", (req, res) => {});
+router.get("/elements", async (req, res) => {
+  // Get all elements
+  const elements = await client.element.findMany();
+  res.json({
+    elements: elements.map((element) => ({
+      id: element.id,
+      imageUrl: element.imageUrl,
+      width: element.width,
+      height: element.height,
+      static: element.static,
+    })),
+  })
+});
+router.get("/avatars",async (req, res) => {
+  // Get all avatars
+  const avatars = await client.avatar.findMany();
+  res.json({avatars: avatars.map((avatar) => {
+    id: avatar.id,
+    imageUrl: avatar.imageUrl
+  })});
+});
 
 router.use("/user", userRouter);
 router.use("/space", spaceRouter);
